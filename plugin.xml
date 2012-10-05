@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <name>
+        <lang name="default">Tagextender</lang>
+        <lang name="russian">Tagextender - расширение тегов</lang>
+    </name>
+    <author>
+        <lang name="default">kpoxas</lang>
+        <lang name="russian">kpoxas</lang>
+    </author>
+    <homepage>http://livestreet.ru</homepage>
+    <version>1.0.0</version>
+    <requires>
+        <livestreet>1.0.1</livestreet>
+        <plugins>
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Разбивает теги на группы с возможностью подвязать их любому типу топика или блога</lang>
+        <lang name="russian">Adds ability to create tag groups and relate them to any blog or topic type</lang>
+    </description>
+    <settings>{admin}tagextender/</settings>
+</plugin>
