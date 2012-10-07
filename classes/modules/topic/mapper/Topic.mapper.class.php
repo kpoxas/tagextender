@@ -53,9 +53,9 @@ class PluginTagextender_ModuleTopic_MapperTopic extends PluginTagextender_Inheri
      * @return array
      */
     public function GetTopicTypes() {
-        $sql = "SHOW COLUMNS FROM ".Config::Get('db.table.topic')."
+        $sql = "SHOW COLUMNS FROM `".Config::Get('db.table.topic')."`
 			WHERE
-				field = 'topic_type'
+				`Field` = 'topic_type'
 		";
         if ($aResult = $this->oDb->selectRow($sql)) {
             $sTypes = str_ireplace(array("enum('", "')", "''"), array('', '', "'"), $aResult['Type']);
@@ -69,9 +69,9 @@ class PluginTagextender_ModuleTopic_MapperTopic extends PluginTagextender_Inheri
      * @return array
      */
     public function GetBlogTypes() {
-        $sql = "SHOW COLUMNS FROM ".Config::Get('db.table.blog')."
+        $sql = "SHOW COLUMNS FROM `".Config::Get('db.table.blog')."`
 			WHERE
-				field = 'blog_type'
+				`Field` = 'blog_type'
 		";
         if ($aResult = $this->oDb->selectRow($sql)) {
             $sTypes = str_ireplace(array("enum('", "')", "''"), array('', '', "'"), $aResult['Type']);
@@ -79,6 +79,61 @@ class PluginTagextender_ModuleTopic_MapperTopic extends PluginTagextender_Inheri
         }
         return false;
     }
+
+    /**
+     * Получает список топиков по тегу
+     *
+     * @param  array  $aFilter	Фильтр
+     * @param  array  $aExcludeBlog	Список ID блогов для исключения
+     * @param  int    $iCount	Возвращает общее количество элементов
+     * @param  int    $iCurrPage	Номер страницы
+     * @param  int    $iPerPage	Количество элементов на страницу
+     * @return array
+     */
+    public function GetTopicsByTagFilter($aFilter,$aExcludeBlog,&$iCount,$iCurrPage,$iPerPage) {
+        $sTag = $aFilter['tag'];
+        if (isset($aFilter['keyword']) && !empty($aFilter['keyword'])) {
+            $aKeywords = (array)$aFilter['keyword'];
+            foreach($aKeywords as &$sKeyword) {
+               $sKeyword = mb_strtolower($sKeyword,"UTF-8");
+            }
+        } else {
+            $aKeywords = null;
+        }
+
+        $sql = "
+							SELECT
+								tt.topic_id
+							FROM
+								".Config::Get('db.table.topic_tag')." tt
+								{ LEFT JOIN ".Config::Get('db.table.topic_tag_group')." ttg ON (tt.topic_tag_group_id=ttg.id and 1=?d) }
+							WHERE
+								topic_tag_text = ?
+								{ AND tt.blog_id NOT IN (?a) }
+								{ AND tt.group_id IN (?a) }
+								{ AND LOWER(ttg.keyword) IN (?a) }
+                            ORDER BY topic_id DESC
+                            LIMIT ?d, ?d ";
+
+        $aTopics=array();
+        if ($aRows=$this->oDb->selectPage(
+            $iCount,$sql,
+            $aKeywords?1:DBSIMPLE_SKIP,
+            $sTag,
+            (is_array($aExcludeBlog)&&count($aExcludeBlog)) ? $aExcludeBlog : DBSIMPLE_SKIP,
+            (isset($aFilter['group_id'])&&count((array)$aFilter['group_id'])) ? (array)$aFilter['group_id'] : DBSIMPLE_SKIP,
+            $aKeywords,
+            ($iCurrPage-1)*$iPerPage, $iPerPage
+        )
+        ) {
+            foreach ($aRows as $aTopic) {
+                $aTopics[]=$aTopic['topic_id'];
+            }
+        }
+        return $aTopics;
+    }
+
+
 
 }
 

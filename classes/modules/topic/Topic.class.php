@@ -66,7 +66,36 @@ class PluginTagextender_ModuleTopic extends PluginTagextender_Inherit_ModuleTopi
         }
         return $result;
     }
-
+    /**
+     * Получает список топиков по тегу
+     *
+     * @param  array  $aFilter	Фильтр
+     * @param  int    $iPage	Номер страницы
+     * @param  int    $iPerPage	Количество элементов на страницу
+     * @param  bool   $bAddAccessible Указывает на необходимость добавить в выдачу топики,
+     *                                из блогов доступных пользователю. При указании false,
+     *                                в выдачу будут переданы только топики из общедоступных блогов.
+     * @return array
+     */
+    public function GetTopicsByTagFilter($aFilter,$iPage,$iPerPage,$bAddAccessible=true) {
+        if (!isset($aFilter['tag']) || !$sTag = $aFilter['tag']) {
+            return false;
+        }
+        if (!is_numeric($iPage) or $iPage<=0) {
+            $iPage=1;
+        }
+        $aCloseBlogs = ($this->oUserCurrent && $bAddAccessible)
+            ? $this->Blog_GetInaccessibleBlogsByUser($this->oUserCurrent)
+            : $this->Blog_GetInaccessibleBlogsByUser();
+        $aFilterForCache = array_diff_assoc($aFilter,array('tag'=>''));
+        $s = serialize(func_array_merge_assoc($aFilterForCache,$aCloseBlogs));
+        if (false === ($data = $this->Cache_Get("topic_tag_{$sTag}_{$iPage}_{$iPerPage}_{$s}"))) {
+            $data = array('collection'=>$this->oMapperTopic->GetTopicsByTagFilter($aFilter,$aCloseBlogs,$iCount,$iPage,$iPerPage),'count'=>$iCount);
+            $this->Cache_Set($data, "topic_tag_{$sTag}_{$iPage}_{$iPerPage}_{$s}", array('topic_update','topic_new'), 60*60*24*2);
+        }
+        $data['collection']=$this->GetTopicsAdditionalData($data['collection']);
+        return $data;
+    }
     /**
      * Достает все типы топика
      *

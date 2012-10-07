@@ -20,9 +20,6 @@ class PluginTagextender_ActionTopic extends PluginTagextender_Inherit_ActionTopi
             $oTopic->setTagsGrouped(array_intersect_key(getRequest('topic_tags_grouped'),$aTagGroups));
         }
         $result = parent::checkTopicFields($oTopic);
-        /*echo "<pre>";
-        print_r($oTopic->_getValidateErrors());
-        die();   */
         return $result;
     }
 }
