@@ -18,7 +18,7 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
         $aTagGroups = $this->PluginTagextender_Tagextender_GetTagGroups($this->getType(),$this->getBlogId());
         // соответствие keyword => id
         foreach ($aTagGroups as $oTagGroup) {
-            $this->aTagGroupsByKeyword[$oTagGroup->keyword]=$oTagGroup->id;
+            $this->aTagGroupsByKeyword[func_underscore($oTagGroup->keyword)]=$oTagGroup->id;
         }
         $this->aTagGroups = $aTagGroups;
         $this->iTagGroupsBlogId =$this->getBlogId();
@@ -114,7 +114,7 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
 
     public function __call($sName,$aArgs) {
         $sFunc = func_underscore($sName);
-        if (preg_match('/^get_tags_([a-z0-9]+)$/i',$sFunc, $aMatches)) {
+        if (preg_match('/^get_tags_([a-z_0-9]+)$/i',$sFunc, $aMatches)) {
             return $this->getTagsByKeyword($aMatches[1]);
         }
         return call_user_func_array(array('parent',__FUNCTION__),func_get_args());

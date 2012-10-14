@@ -13,14 +13,15 @@ class PluginTagextender_ModuleTopic extends PluginTagextender_Inherit_ModuleTopi
         // execute original function first
         $result = call_user_func_array(array('parent',__FUNCTION__),$args);
         // check if it is a proper object
-        if (is_a($result,'ModuleTopic_EntityTopic')) {
+        /*if (is_a($result,'ModuleTopic_EntityTopic')) {
             $oTopic = $result;
-        }
+        } */
         $aTagsGrouped = $oTopic->getTagsGrouped();
-        if ($oTopic->getPublish() || empty($aTagsGrouped)) {
+        if (!$oTopic->getPublish() || empty($aTagsGrouped)) {
             return $result;
         }
         $this->AddTopicTagsGrouped($oTopic);
+        return $result;
     }
 
     public function AddTopicTagsGrouped(ModuleTopic_EntityTopic $oTopic) {

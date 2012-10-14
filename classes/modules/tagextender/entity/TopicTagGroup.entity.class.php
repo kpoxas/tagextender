@@ -99,7 +99,6 @@ class PluginTagextender_ModuleTagextender_EntityTopicTagGroup extends EntityORM 
     }
     public function setAllowEmpty($data) {
         $this->setExtraValue('allow_empty',$data);
-        print_r($this->aExtra);
     }
     /**
      * Данные для валидации
