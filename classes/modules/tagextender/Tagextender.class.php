@@ -26,6 +26,7 @@ class PluginTagextender_ModuleTagextender extends ModuleORM {
             // check for topic type
             if (!$sTopicType || !in_array($sTopicType,(array)$oTagGroup->getTopicTypes())) unset($aTagGroups[$key]);
             // check for blog type
+            if ($iBlogId===null) continue;
             if ($iBlogId==0) {
                 $oBlog=$this->Blog_GetPersonalBlogByUserId($this->oUserCurrent->getId());
             } else {

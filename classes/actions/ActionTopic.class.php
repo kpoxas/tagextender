@@ -16,8 +16,7 @@ class PluginTagextender_ActionTopic extends PluginTagextender_Inherit_ActionTopi
      */
     protected function checkTopicFields($oTopic) {
         if ($aTagGroups = $this->PluginTagextender_Tagextender_GetTagGroups($oTopic->getType(),$oTopic->getBlogId())) {
-            $oTopic->setAllowEmptyTags(true);
-            $oTopic->setTagsGrouped(array_intersect_key(getRequest('topic_tags_grouped'),$aTagGroups));
+            $oTopic->setTagsGrouped(array_intersect_key((array)getRequest('topic_tags_grouped'),$aTagGroups));
         }
         $result = parent::checkTopicFields($oTopic);
         return $result;

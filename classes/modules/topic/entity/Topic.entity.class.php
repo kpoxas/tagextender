@@ -86,6 +86,7 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
          */
         $aTagGroups =  $this->getTagGroups();
         if (!empty($aTagGroups)) {
+            $this->setAllowEmptyTags(true);
             // set validator for each group
             foreach ($aTagGroups as $oTagGroup) {
                 $this->aValidateRules[]=array('topic_tags_grouped'.$oTagGroup->getId(),'tags',

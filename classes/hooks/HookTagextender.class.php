@@ -14,6 +14,7 @@ class PluginTagextender_HookTagextender extends Hook {
         $this->AddHook('template_admin_action_item', 'addMenuAdmin',  __CLASS__, -10);
 
         $this->AddHook('template_topic_content_begin', 'injectTags',  __CLASS__, -10);
+        $this->AddHook('template_topic_preview_content_begin', 'injectTagsPreview',  __CLASS__, -10);
     }
 
     public function injectJS() {
@@ -48,6 +49,17 @@ class PluginTagextender_HookTagextender extends Hook {
         $oTopic = $aParams['topic'];
         $this->Viewer_Assign('oTopic',$oTopic);
         return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__) . 'inject.topic.tags.tpl');
+    }
+    /**
+     * Вывод доп тегов в превью
+     */
+    public function injectTagsPreview($aParams) {
+        $oTopic = $aParams['topic'];
+        if ($aTagGroups = $this->PluginTagextender_Tagextender_GetTagGroups($oTopic->getType(),$oTopic->getBlogId())) {
+            $oTopic->setTagsGrouped(array_intersect_key((array)getRequest('topic_tags_grouped'),$aTagGroups));
+            $this->Viewer_Assign('oTopic',$oTopic);
+            return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__) . 'inject.topic.tags.tpl');
+        }
     }
 }
 ?>
