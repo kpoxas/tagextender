@@ -16,7 +16,7 @@ class PluginTagextender extends Plugin {
 
     // Объявление переопределений (модули, мапперы и сущности)
     protected $aInherits=array(
-         'action'  =>array('ActionAdmin','ActionTopic','ActionBlog','ActionTag'),
+         'action'  =>array('ActionAdmin','ActionTopic','ActionLink','ActionPhotoset','ActionQuestion','ActionBlog','ActionTag'),
          'module'  =>array('ModuleTopic'),
          'entity'  =>array('ModuleTopic_EntityTopic'),
          'mapper'  =>array('ModuleTopic_MapperTopic'),
