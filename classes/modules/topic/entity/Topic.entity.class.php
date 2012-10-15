@@ -86,6 +86,7 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
         /**
          * Определяем правила валидации
          */
+        $args = func_get_args();
         $aTagGroups =  $this->getTagGroups();
         if (!empty($aTagGroups)) {
             $this->setAllowEmptyTags(true);
@@ -104,7 +105,7 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
             }
         }
 
-        $result = call_user_func_array(array('parent',__FUNCTION__), func_get_args());
+        $result = call_user_func_array(array('parent',__FUNCTION__), $args);
         // set validated tags
         $aTagsGroupedNew = array();
         foreach ($aTagGroups as $iGroupId=>$sTags) {
@@ -117,10 +118,11 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
 
     public function __call($sName,$aArgs) {
         $sFunc = func_underscore($sName);
+        $args = func_get_args();
         if (preg_match('/^get_tags_([a-z_0-9]+)$/i',$sFunc, $aMatches)) {
             return $this->getTagsByKeyword($aMatches[1]);
         }
-        return call_user_func_array(array('parent',__FUNCTION__),func_get_args());
+        return call_user_func_array(array('parent',__FUNCTION__),$args);
     }
 
 }
