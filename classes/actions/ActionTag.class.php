@@ -28,7 +28,7 @@ class PluginTagextender_ActionTag extends PluginTagextender_Inherit_ActionTag {
             'tag' =>  $sTag,
             'keyword' =>  $sKeyword,
         );
-        $aResult=$this->PluginTagextender_Topic_GetTopicsByTagFilter($aFilter,$iPage,Config::Get('module.topic.per_page'));
+        $aResult=$this->Topic_GetTopicsByTagFilter($aFilter,$iPage,Config::Get('module.topic.per_page'));
         $aTopics=$aResult['collection'];
         /**
          * Вызов хуков
