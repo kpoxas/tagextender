@@ -110,7 +110,7 @@ class PluginTagextender_ModuleTopic_MapperTopic extends PluginTagextender_Inheri
 							WHERE
 								topic_tag_text = ?
 								{ AND tt.blog_id NOT IN (?a) }
-								{ AND tt.group_id IN (?a) }
+								{ AND tt.topic_tag_group_id IN (?a) }
 								{ AND LOWER(ttg.keyword) IN (?a) }
                             ORDER BY topic_id DESC
                             LIMIT ?d, ?d ";

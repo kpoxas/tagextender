@@ -97,6 +97,14 @@ class PluginTagextender_ModuleTopic extends PluginTagextender_Inherit_ModuleTopi
         $data['collection']=$this->GetTopicsAdditionalData($data['collection']);
         return $data;
     }
+
+    public function GetTopicsByTag($sTag,$iPage,$iPerPage,$bAddAccessible=true) {
+        $aFilter = array(
+            'tag' => $sTag,
+            'group_id' => 0
+        );
+        return $this->GetTopicsByTagFilter($aFilter,$iPage,$iPerPage,$bAddAccessible);
+    }
     /**
      * Достает все типы топика
      *
