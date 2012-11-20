@@ -37,7 +37,7 @@ class PluginTagextender_ActionTag extends PluginTagextender_Inherit_ActionTag {
         /**
          * Формируем постраничность
          */
-        $aPaging=$this->Viewer_MakePaging($aResult['count'],$iPage,Config::Get('module.topic.per_page'),Config::Get('pagination.pages.count'),Router::GetPath('tag').htmlspecialchars($sTag));
+        $aPaging=$this->Viewer_MakePaging($aResult['count'],$iPage,Config::Get('module.topic.per_page'),Config::Get('pagination.pages.count'),Router::GetPath('tag').$sKeyword.'/'.htmlspecialchars($sTag));
         /**
          * Загружаем переменные в шаблон
          */
