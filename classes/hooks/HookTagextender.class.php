@@ -24,7 +24,7 @@ class PluginTagextender_HookTagextender extends Hook {
     public function addTopicFormVars($aParams) {
         $oTopic = $aParams['oTopic'];
         if (!isPost('submit_topic_publish') && !isPost('submit_topic_save')) {
-           $_REQUEST['topic_tags_grouped'] = $oTopic->getTagsGrouped();
+            $_REQUEST['topic_tags_grouped'] = $oTopic->getTagsGrouped();
         }
     }
 
@@ -48,6 +48,7 @@ class PluginTagextender_HookTagextender extends Hook {
     public function injectTags($aParams) {
         $oTopic = $aParams['topic'];
         $this->Viewer_Assign('oTopic',$oTopic);
+        $this->Viewer_Assign('bTopicList',$aParams['bTopicList']);
         return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__) . 'inject.topic.tags.tpl');
     }
     /**
