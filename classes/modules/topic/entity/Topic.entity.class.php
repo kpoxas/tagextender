@@ -90,11 +90,11 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
     }
 
     public function setAllowEmptyTags($data) {
-        foreach($this->aValidateRules as &$aValidateRule) {
-            if($aValidateRule[0] == 'topic_tags') {
-                $aValidateRule['allowEmpty'] = $data;
-            }
-        }
+         foreach($this->aValidateRules as &$aValidateRule) {
+             if($aValidateRule[0] == 'topic_tags') {
+                 $aValidateRule['allowEmpty'] = $data;
+             }
+         }
     }
 
     public function _Validate($aFields=null, $bClearErrors=true) {
@@ -108,17 +108,22 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
             // set validator for each group
             foreach ($aTagGroups as $oTagGroup) {
                 $this->aValidateRules[]=array('topic_tags_grouped'.$oTagGroup->getId(),'tags',
-                                              'count'=>15,
-                                              'label'=>$this->Lang_Get('topic_create_tags'),
-                                              'allowEmpty'=> $oTagGroup->getAllowEmpty() === null ?  Config::Get('module.topic.allow_empty_tags') : $oTagGroup->getAllowEmpty(),
-                                              'count' => $oTagGroup->getMaxCount(),
-                                              'min' => $oTagGroup->getMinLength(),
-                                              'max' => $oTagGroup->getMaxLength(),
-                                              'on'=>array('topic','link','question','photoset'),
-                                              'label' => $oTagGroup->getName(),
+                    'count'=>15,
+                    'label'=>$this->Lang_Get('topic_create_tags'),
+                    'allowEmpty'=> $oTagGroup->getAllowEmpty() === null ?  Config::Get('module.topic.allow_empty_tags') : $oTagGroup->getAllowEmpty(),
+                    'count' => $oTagGroup->getMaxCount(),
+                    'min' => $oTagGroup->getMinLength(),
+                    'max' => $oTagGroup->getMaxLength(),
+                    'on'=>array($this->getType()),
+                    'label' => $oTagGroup->getName(),
                 );
             }
         }
+/*
+        echo "<pre>";
+        print_r($this->aValidateRules);
+        echo "</pre>";
+        die();*/
 
         $result = call_user_func_array(array('parent',__FUNCTION__), $args);
         // set validated tags

@@ -102,18 +102,18 @@ class PluginTagextender_ModuleTopic_MapperTopic extends PluginTagextender_Inheri
         }
 
         $sql = "
-							SELECT
-								tt.topic_id
-							FROM
-								".Config::Get('db.table.topic_tag')." tt
-								{ LEFT JOIN ".Config::Get('db.table.topic_tag_group')." ttg ON (tt.topic_tag_group_id=ttg.id and 1=?d) }
-							WHERE
-								topic_tag_text = ?
-								{ AND tt.blog_id NOT IN (?a) }
-								{ AND tt.topic_tag_group_id IN (?a) }
-								{ AND LOWER(ttg.keyword) IN (?a) }
-                            ORDER BY topic_id DESC
-                            LIMIT ?d, ?d ";
+            SELECT
+                tt.topic_id
+            FROM
+                ".Config::Get('db.table.topic_tag')." tt
+                { LEFT JOIN ".Config::Get('db.table.topic_tag_group')." ttg ON (tt.topic_tag_group_id=ttg.id and 1=?d) }
+            WHERE
+                topic_tag_text = ?
+                { AND tt.blog_id NOT IN (?a) }
+                { AND tt.topic_tag_group_id IN (?a) }
+                { AND LOWER(ttg.keyword) IN (?a) }
+            ORDER BY topic_id DESC
+            LIMIT ?d, ?d ";
 
         $aTopics=array();
         if ($aRows=$this->oDb->selectPage(
@@ -133,7 +133,49 @@ class PluginTagextender_ModuleTopic_MapperTopic extends PluginTagextender_Inheri
         return $aTopics;
     }
 
-
+    /**
+     * Получает список тегов из топиков открытых блогов (open,personal)
+     *
+     * @param  int $iLimit	Количество
+     * @param  int|null $iUserId	ID пользователя, чью теги получаем
+     * @return array
+     */
+    public function GetOpenTopicTags($iLimit,$iUserId=null,$aGroupId=array(0)) {
+        $sql = "
+			SELECT
+				tt.topic_tag_text,
+				count(tt.topic_tag_text)	as count
+			FROM
+				".Config::Get('db.table.topic_tag')." as tt,
+				".Config::Get('db.table.blog')." as b
+			WHERE
+				1 = 1
+				{ AND tt.user_id = ?d }
+				AND
+				tt.blog_id = b.blog_id
+				AND
+				b.blog_type <> 'close'
+				AND
+				tt.topic_tag_group_id IN(?a)
+			GROUP BY
+				tt.topic_tag_text
+			ORDER BY
+				count desc
+			LIMIT 0, ?d
+				";
+        $aReturn=array();
+        $aReturnSort=array();
+        if ($aRows=$this->oDb->select($sql,is_null($iUserId) ? DBSIMPLE_SKIP : $iUserId,$aGroupId,$iLimit)) {
+            foreach ($aRows as $aRow) {
+                $aReturn[mb_strtolower($aRow['topic_tag_text'],'UTF-8')]=$aRow;
+            }
+            ksort($aReturn);
+            foreach ($aReturn as $aRow) {
+                $aReturnSort[]=Engine::GetEntity('Topic_TopicTag',$aRow);
+            }
+        }
+        return $aReturnSort;
+    }
 
 }
 

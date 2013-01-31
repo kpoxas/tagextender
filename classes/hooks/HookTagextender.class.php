@@ -24,7 +24,7 @@ class PluginTagextender_HookTagextender extends Hook {
     public function addTopicFormVars($aParams) {
         $oTopic = $aParams['oTopic'];
         if (!isPost('submit_topic_publish') && !isPost('submit_topic_save')) {
-            $_REQUEST['topic_tags_grouped'] = $oTopic->getTagsGrouped();
+           $_REQUEST['topic_tags_grouped'] = $oTopic->getTagsGrouped();
         }
     }
 

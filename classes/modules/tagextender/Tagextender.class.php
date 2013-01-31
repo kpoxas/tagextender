@@ -22,7 +22,7 @@ class PluginTagextender_ModuleTagextender extends ModuleORM {
         if (!$aTagGroups = $this->GetTopicTagGroupItemsByFilter($aFilter)) {
             return null;
         }
-        foreach ($aTagGroups as $key=>$oTagGroup) {
+        foreach ($aTagGroups as $key=>&$oTagGroup) {
             // check for topic type
             if (!$sTopicType || !in_array($sTopicType,(array)$oTagGroup->getTopicTypes())) unset($aTagGroups[$key]);
             // check for blog type

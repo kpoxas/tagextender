@@ -101,9 +101,33 @@ class PluginTagextender_ModuleTopic extends PluginTagextender_Inherit_ModuleTopi
     public function GetTopicsByTag($sTag,$iPage,$iPerPage,$bAddAccessible=true) {
         $aFilter = array(
             'tag' => $sTag,
-            'group_id' => 0
         );
+        if (!Config::Get('plugin.tagextender.include_all')) {
+            $aFilter['group_id'] = 0;
+        }
         return $this->GetTopicsByTagFilter($aFilter,$iPage,$iPerPage,$bAddAccessible);
+    }
+    /**
+     * Получает список тегов из топиков открытых блогов (open,personal)
+     *
+     * @param  int $iLimit	Количество
+     * @param  int|null $iUserId	ID пользователя, чью теги получаем
+     * @param  int|array|null $aGroupId	ID групп тегов
+     * @return array
+     */
+    public function GetOpenTopicTags($iLimit,$iUserId=null,$aGroupId=array(0)) {
+        if (empty($aGroupId)) $aGroupId = array(0);
+        $aGroupId = (array)$aGroupId;
+
+        $sCacheKey = "tag_{$iLimit}_{$iUserId}_open";
+        if (sizeof($aGroupId)>1||$aGroupId[0]!==0) {
+           $sCacheKey.= @serialize($aGroupId);
+        }
+        if (false === ($data = $this->Cache_Get($sCacheKey))) {
+            $data = $this->oMapperTopic->GetOpenTopicTags($iLimit,$iUserId,$aGroupId);
+            $this->Cache_Set($data, $sCacheKey, array('topic_update','topic_new'), 60*60*24*3);
+        }
+        return $data;
     }
     /**
      * Достает все типы топика
