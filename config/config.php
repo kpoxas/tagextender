@@ -17,4 +17,5 @@ Config::Set('db.table.tagextender_topic_tag_group','___db.table.prefix___topic_t
 Config::Set('db.table.topic_tag_meta','___db.table.prefix___topic_tag_meta');
 Config::Set('db.table.tagextender_topic_tag_meta','___db.table.prefix___topic_tag_meta');
 
+$config['include_all']=true;  // показывать все теги в результатах отбора, даже если они не в той группе
 return $config;

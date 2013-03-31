@@ -27,6 +27,7 @@ class PluginTagextender_ActionTag extends PluginTagextender_Inherit_ActionTag {
         $aFilter = array(
             'tag' =>  $sTag,
             'keyword' =>  $sKeyword,
+            'topic_publish' => 1,
         );
         $aResult=$this->Topic_GetTopicsByTagFilter($aFilter,$iPage,Config::Get('module.topic.per_page'));
         $aTopics=$aResult['collection'];

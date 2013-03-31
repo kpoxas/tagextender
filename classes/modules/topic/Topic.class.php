@@ -63,7 +63,10 @@ class PluginTagextender_ModuleTopic extends PluginTagextender_Inherit_ModuleTopi
             || $oTopic->getBlogId()!=$oTopicOld->getBlogId()
             || @serialize($oTopic->getTagsGrouped())!==@serialize($oTopicOld->getTagsGrouped())
         ) {
-            $this->AddTopicTagsGrouped($oTopic);
+            $aTagsGrouped = $oTopic->getTagsGrouped();
+            if ($oTopic->getPublish() && !empty($aTagsGrouped)) {
+                $this->AddTopicTagsGrouped($oTopic);
+            }
         }
         return $result;
     }

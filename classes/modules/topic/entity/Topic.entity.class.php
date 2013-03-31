@@ -77,14 +77,17 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
             if (!isset($this->aTagGroupsByKeyword[$keyword])) continue;
             $aTags[$this->aTagGroupsByKeyword[$keyword]] = $this->getTagsGroupedArray($this->aTagGroupsByKeyword[$keyword]);
         }
-        return $aTags;
+        return array_diff($aTags,array(''));
     }
 
     public function setTagsGrouped($data) {
-        $this->setExtraValue('topic_tags_grouped',array_diff(array_map('trim',$data),array('')));
+        $aOldTagsGrouped = $this->getExtraValue('topic_tags_grouped');
+        $aNewTagsGrouped = array_diff(array_map('trim',$data),array(''));
+        $aTagsGrouped = func_array_merge_assoc($aOldTagsGrouped,(array)$aNewTagsGrouped);
+        $this->setExtraValue('topic_tags_grouped',$aTagsGrouped);
         // needs for validation
         if (empty($data)) return;
-        foreach ((array)$data as $iGroupId=>$sTags) {
+        foreach ($aTagsGrouped as $iGroupId=>$sTags) {
             $this->_aData['topic_tags_grouped'.$iGroupId] = $sTags;
         }
     }
@@ -119,15 +122,11 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
                 );
             }
         }
-/*
-        echo "<pre>";
-        print_r($this->aValidateRules);
-        echo "</pre>";
-        die();*/
 
         $result = call_user_func_array(array('parent',__FUNCTION__), $args);
         // set validated tags
         $aTagsGroupedNew = array();
+
         foreach ($aTagGroups as $iGroupId=>$sTags) {
             if (!isset($this->_aData['topic_tags_grouped'.$iGroupId])) continue;
             $aTagsGroupedNew[$iGroupId] = $this->_aData['topic_tags_grouped'.$iGroupId];
