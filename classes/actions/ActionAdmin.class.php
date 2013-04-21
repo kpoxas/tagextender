@@ -87,8 +87,8 @@ class PluginTagextender_ActionAdmin extends PluginTagextender_Inherit_ActionAdmi
             $this->Viewer_AddHtmlTitle($oTarget->getName());
             $this->Viewer_AddHtmlTitle($this->Lang_get('plugin.tagextender.group_edit'));
         }
-        $aTopicTypes = $this->Topic_GetTopicTypes();
-        $aBlogTypes = $this->Topic_GetBlogTypes();
+        $aTopicTypes = (array)$this->Topic_GetTopicTypes();
+        $aBlogTypes = (array)$this->Topic_GetBlogTypes();
         /**
          * Переданы ли данные формы
          */
@@ -105,8 +105,8 @@ class PluginTagextender_ActionAdmin extends PluginTagextender_Inherit_ActionAdmi
             $oTarget->setMaxLength(intval(getRequest('max', 0, 'post')));
             $oTarget->setMinLength(intval(getRequest('min', 0, 'post')));
             $oTarget->setSep(getRequest('sep'));
-            $oTarget->setTopicTypes(array_values(array_intersect($aTopicTypes,getRequest('topic_types'))));
-            $oTarget->setBlogTypes(array_values(array_intersect($aBlogTypes,getRequest('blog_types'))));
+            $oTarget->setTopicTypes(array_values(array_intersect($aTopicTypes,(array)getRequest('topic_types'))));
+            $oTarget->setBlogTypes(array_values(array_intersect($aBlogTypes,(array)getRequest('blog_types'))));
             /**
              * Проверка корректности полей формы и сохранение
              */

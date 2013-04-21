@@ -19,7 +19,10 @@ ls.plugin.tagextender = (function ($) {
             if(!result.sTagGroups) {
                 $('#topic_tags').parent().show();
             } else {
-                $('#topic_tags').parent().hide().after(result.sTagGroups);
+                if (ls.registry.get('plugin.tagextender.hide_native_tags')) {
+                    $('#topic_tags').parent().hide();
+                }
+                $('#topic_tags').parent().after(result.sTagGroups);
                 ls.autocomplete.add($(".autocomplete-tags-sep"), aRouter['ajax']+'autocompleter/tag/', true);
             }
         });

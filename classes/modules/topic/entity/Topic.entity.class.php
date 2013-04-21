@@ -86,7 +86,7 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
         $aTagsGrouped = func_array_merge_assoc($aOldTagsGrouped,(array)$aNewTagsGrouped);
         $this->setExtraValue('topic_tags_grouped',$aTagsGrouped);
         // needs for validation
-        if (empty($data)) return;
+        if (empty($aTagsGrouped)) return;
         foreach ($aTagsGrouped as $iGroupId=>$sTags) {
             $this->_aData['topic_tags_grouped'.$iGroupId] = $sTags;
         }
@@ -126,6 +126,8 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
         $result = call_user_func_array(array('parent',__FUNCTION__), $args);
         // set validated tags
         $aTagsGroupedNew = array();
+
+        if (empty($aTagGroups)) return $result;
 
         foreach ($aTagGroups as $iGroupId=>$sTags) {
             if (!isset($this->_aData['topic_tags_grouped'.$iGroupId])) continue;

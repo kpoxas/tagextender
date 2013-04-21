@@ -40,6 +40,8 @@ class PluginTagextender_HookTagextender extends Hook {
      * Прогружаем значение JS переменных
      */
     public function InjectHeader() {
+        $aValidEvents = array('add','edit');
+        if (!in_array(Router::GetActionEvent(), $aValidEvents)) return;
         return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__).'inject.header.tpl');
     }
     /**

@@ -18,4 +18,5 @@ Config::Set('db.table.topic_tag_meta','___db.table.prefix___topic_tag_meta');
 Config::Set('db.table.tagextender_topic_tag_meta','___db.table.prefix___topic_tag_meta');
 
 $config['include_all']=true;  // показывать все теги в результатах отбора, даже если они не в той группе
+$config['hide_native_tags']=true;  // прятать родные теги ЛС, если есть группы
 return $config;
