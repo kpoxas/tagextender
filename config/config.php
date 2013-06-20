@@ -19,4 +19,16 @@ Config::Set('db.table.tagextender_topic_tag_meta','___db.table.prefix___topic_ta
 
 $config['include_all']=true;  // показывать все теги в результатах отбора, даже если они не в той группе
 $config['hide_native_tags']=true;  // прятать родные теги ЛС, если есть группы
+
+// для AceAdmin
+Config::Set(
+    'plugin.aceadminpanel.autonomous.events',
+    array_merge(
+        (array)Config::Get('plugin.table.autonomous.events'),
+        array('tagextender')
+    )
+);
+
+
+
 return $config;
