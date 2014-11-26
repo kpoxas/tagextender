@@ -83,22 +83,24 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
 
     public function setTagsGrouped($data) {
         $aOldTagsGrouped = $this->getExtraValue('topic_tags_grouped');
-        $aNewTagsGrouped = array_diff(array_map('trim',$data),array(''));
-        $aTagsGrouped = func_array_merge_assoc($aOldTagsGrouped,(array)$aNewTagsGrouped);
+        //$aNewTagsGrouped = array_diff(array_map('trim',$data),array(''));
+        $aNewTagsGrouped = array_map('trim',$data);
+        $aTagsGrouped = array_filter(func_array_merge_assoc($aOldTagsGrouped,(array)$aNewTagsGrouped));
         $this->setExtraValue('topic_tags_grouped',$aTagsGrouped);
         // needs for validation
         if (empty($aTagsGrouped)) return;
+
         foreach ($aTagsGrouped as $iGroupId=>$sTags) {
             $this->_aData['topic_tags_grouped'.$iGroupId] = $sTags;
         }
     }
 
     public function setAllowEmptyTags($data) {
-        foreach($this->aValidateRules as &$aValidateRule) {
-            if($aValidateRule[0] == 'topic_tags') {
-                $aValidateRule['allowEmpty'] = $data;
-            }
-        }
+         foreach($this->aValidateRules as &$aValidateRule) {
+             if($aValidateRule[0] == 'topic_tags') {
+                 $aValidateRule['allowEmpty'] = $data;
+             }
+         }
     }
 
     public function _Validate($aFields=null, $bClearErrors=true) {
@@ -112,14 +114,14 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
             // set validator for each group
             foreach ($aTagGroups as $oTagGroup) {
                 $this->aValidateRules[]=array('topic_tags_grouped'.$oTagGroup->getId(),'tags',
-                                              'count'=>15,
-                                              'label'=>$this->Lang_Get('topic_create_tags'),
-                                              'allowEmpty'=> $oTagGroup->getAllowEmpty() === null ?  Config::Get('module.topic.allow_empty_tags') : $oTagGroup->getAllowEmpty(),
-                                              'count' => $oTagGroup->getMaxCount(),
-                                              'min' => $oTagGroup->getMinLength(),
-                                              'max' => $oTagGroup->getMaxLength(),
-                                              'on'=>array($this->getType()),
-                                              'label' => $oTagGroup->getName(),
+                    'count'=>15,
+                    'label'=>$this->Lang_Get('topic_create_tags'),
+                    'allowEmpty'=> $oTagGroup->getAllowEmpty() === null ?  Config::Get('module.topic.allow_empty_tags') : $oTagGroup->getAllowEmpty(),
+                    'count' => $oTagGroup->getMaxCount(),
+                    'min' => $oTagGroup->getMinLength(),
+                    'max' => $oTagGroup->getMaxLength(),
+                    'on'=>array($this->getType()),
+                    'label' => $oTagGroup->getName(),
                 );
             }
         }
@@ -129,7 +131,6 @@ class PluginTagextender_ModuleTopic_EntityTopic extends PluginTagextender_Inheri
         $aTagsGroupedNew = array();
 
         if (empty($aTagGroups)) return $result;
-
         foreach ($aTagGroups as $iGroupId=>$sTags) {
             if (!isset($this->_aData['topic_tags_grouped'.$iGroupId])) continue;
             $aTagsGroupedNew[$iGroupId] = $this->_aData['topic_tags_grouped'.$iGroupId];
